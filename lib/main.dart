@@ -8,14 +8,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Flutter App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: MyHomePage(),
     );
   }
+}
+
+class ClothingItem {
+  final String name;
+  final String imageUrl;
+  final String color;
+  final String size;
+  final double price;
+
+  ClothingItem({
+    required this.name,
+    required this.imageUrl,
+    required this.color,
+    required this.size,
+    required this.price,
+  });
 }
 
 class MyHomePage extends StatefulWidget {
@@ -24,33 +36,56 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePage extends State<MyHomePage> {
-  int itemCount = 0;
-var unitPrice = [
-    51.00,
-    30.0,
-    43.0,
-  ];
+  List<int> itemCounts = List<int>.generate(3, (index) => 0);
+  List<double> unitPrices = [51.0, 30.0, 43.0];
   double totalAmount = 0.0;
 
   void updateTotalAmount() {
     setState(() {
-
-        totalAmount = unitPrice[0]+ unitPrice[1]+ unitPrice[2];
-
-
+      totalAmount = itemCounts.fold(0.0, (prev, count) =>
+      prev + (unitPrices[itemCounts.indexOf(count)] * count));
     });
   }
 
   void showCongratulatorySnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Congratulations! Your order has been placed.'),
+        content: Text('Congratulations! '),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final List<ClothingItem> items = [
+      ClothingItem(
+        name: 'Pullover',
+        imageUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+
+        color: 'Black',
+        size: 'L',
+        price: 51.0,
+      ),
+      ClothingItem(
+        name: 'T-Shirt',
+        imageUrl:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+        color: 'Gray',
+        size: 'L',
+        price: 30.0,
+      ),
+      ClothingItem(
+        name: 'Sport Dress',
+        imageUrl:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+        color: 'Black',
+        size: 'M',
+        price: 43.0,
+      ),
+    ];
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -60,379 +95,173 @@ var unitPrice = [
             children: [
               Expanded(
                 flex: 6,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Icon(Icons.search),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'My Bag',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Icon(Icons.search),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'My Bag',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Card(
-                      child: Row(
-                        children: [
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                color: Colors.black,
-                                width: double.infinity,
-                                height: 150,
-                                child: Image.network(
-                                  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
-                                  fit: BoxFit.fill,
-                                ),
-                              )),
-                          Expanded(
-                              flex: 3,
-                              child: Container(
-                                width: double.infinity,
-                                height: 150,
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text('Pullover'),
-                                        trailing: Icon(Icons.more_vert),
-                                      ),
-                                      Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text('Color: Black   Size: L')),
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Card(
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  if (itemCount > 0) {
-                                                    setState(() {
-                                                      itemCount--;
-                                                      updateTotalAmount();
-                                                    });
-                                                  }
-                                                },
-                                                icon: Icon(Icons.remove),
-                                              ),
-                                              elevation: 10,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(100)),
-                                            ),
-                                          ),
-                                          Text('$itemCount'),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Card(
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    itemCount++;
-                                                    updateTotalAmount();
-                                                  });
-                                                },
-                                                icon: Icon(Icons.add),
-                                              ),
-                                              elevation: 10,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(100)),
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 20),
-                                            child: Text("${unitPrice[0]}\$"),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ))
-                        ],
+                      SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    Card(
-                      child: Row(
-                        children: [
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                color: Colors.black,
-                                width: double.infinity,
-                                height: 150,
-                                child: Image.network(
-                                  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
-                                  fit: BoxFit.fill,
-                                ),
-                              )),
-                          Expanded(
-                              flex: 3,
-                              child: Container(
-                                width: double.infinity,
-                                height: 150,
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text('T-Shirt'),
-                                        trailing: Icon(Icons.more_vert),
-                                      ),
-                                      Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text('Color: Gray   Size: L')),
-                                      Row(
+                      for (int index = 0; index < itemCounts.length; index++)
+                        Card(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    color: Colors.green,
+                                    width: double.infinity,
+                                    height: 150,
+                                    child: Image.network(
+                                      items[index].imageUrl,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 150,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
                                         children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Card(
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  if (itemCount > 0) {
-                                                    setState(() {
-                                                      itemCount--;
-                                                      updateTotalAmount();
-                                                    });
-                                                  }
-                                                },
-                                                icon: Icon(Icons.remove),
+                                          ListTile(
+                                            title: Text(items[index].name, style: TextStyle(fontSize:22,fontWeight: FontWeight.bold),),
+                                            trailing: Icon(Icons.more_vert),
+                                          ),
+                                          Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                'Color: ${items[index].color}   Size: ${items[index].size}',
+                                                style: TextStyle(fontWeight:FontWeight.bold),)),
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.all(8.0),
+                                                child: Card(
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      if (itemCounts[index] >
+                                                          0) {
+                                                        setState(() {
+                                                          itemCounts[index]--;
+                                                          updateTotalAmount();
+                                                        });
+                                                      }
+                                                    },
+                                                    icon: Icon(Icons.remove),
+                                                  ),
+                                                  elevation: 10,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                                ),
                                               ),
-                                              elevation: 10,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(100)),
-                                            ),
-                                          ),
-                                          Text('$itemCount'),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Card(
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    itemCount++;
-                                                    updateTotalAmount();
-                                                  });
-                                                },
-                                                icon: Icon(Icons.add),
+                                              Text('${itemCounts[index]}'),
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.all(8.0),
+                                                child: Card(
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        itemCounts[index]++;
+                                                        updateTotalAmount();
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.add),
+                                                  ),
+                                                  elevation: 10,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                                ),
                                               ),
-                                              elevation: 10,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(100)),
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 20),
-                                            child: Text("30\$"),
-                                          ),
+                                              Spacer(),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 20),
+                                                child:
+                                                Text("${items[index].price}\$"),
+                                              ),
+                                            ],
+                                          )
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Row(
-                        children: [
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                color: Colors.black,
-                                width: double.infinity,
-                                height: 150,
-                                child: Image.network(
-                                  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
-                                  fit: BoxFit.fill,
-                                ),
-                              )),
-                          Expanded(
-                              flex: 3,
-                              child: Container(
-                                width: double.infinity,
-                                height: 150,
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text('Sport Dress'),
-                                        trailing: Icon(Icons.more_vert),
                                       ),
-                                      Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text('Color: Black   Size: M')),
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Card(
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  if (itemCount > 0) {
-                                                    setState(() {
-                                                      itemCount--;
-                                                      updateTotalAmount();
-                                                    });
-                                                  }
-                                                },
-                                                icon: Icon(Icons.remove),
-                                              ),
-                                              elevation: 10,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(100)),
-                                            ),
-                                          ),
-                                          Text('$itemCount'),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Card(
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    itemCount++;
-                                                    updateTotalAmount();
-                                                  });
-                                                },
-                                                icon: Icon(Icons.add),
-                                              ),
-                                              elevation: 10,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(100)),
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 20),
-                                            child: Text("43\$"),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                ],
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
-                  )),
               Expanded(
                   flex: 1,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Column(
-                children: [
-                    SizedBox(height: 20.0),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
+                      children: [
+                        SizedBox(height: 20.0),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Total amount: ',style:
+                                TextStyle(fontWeight:FontWeight.bold),),
 
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total amount: '),
-                            Text('${totalAmount.toStringAsFixed(2)}\$')
-
-                          ],
-
-
+                                Text('${totalAmount.toStringAsFixed(2)}\$',
+                                  style: TextStyle(fontWeight:FontWeight.bold),)
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    Container(
-
-                      width: double.infinity,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(100)
-                      ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.red
+                        SizedBox(
+                          height: 20,
                         ),
-                        onPressed: () {
-                          showCongratulatorySnackbar();
-                        },
-                        child: Text('CHECK OUT'),
-                      ),
+                        Container(
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(150)),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red),
+                            onPressed: () {
+                              showCongratulatorySnackbar();
+                            },
+                            child: Center(child: Text('CHECK OUT')),
+                          ),
+                        ),
+                      ],
                     ),
-                ],
-              ),
                   ))
-
-
-              // Text(
-              //   'Item Count: $itemCount',
-              //   style: TextStyle(fontSize: 24.0),
-              // ),
-              // Text(
-              //   'Unit Price: \$${unitPrice.toStringAsFixed(2)}',
-              //   style: TextStyle(fontSize: 24.0),
-              // ),
-              // Text(
-              //   'Total Amount: \$${totalAmount.toStringAsFixed(2)}',
-              //   style: TextStyle(fontSize: 24.0),
-              // ),
-              // SizedBox(height: 20.0),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: <Widget>[
-              //     IconButton(
-              //       icon: Icon(Icons.remove),
-              //       onPressed: () {
-              //         if (itemCount > 0) {
-              //           setState(() {
-              //             itemCount--;
-              //             updateTotalAmount();
-              //           });
-              //         }
-              //       },
-              //       iconSize: 48.0,
-              //     ),
-              //     IconButton(
-              //       icon: Icon(Icons.add),
-              //       onPressed: () {
-              //         setState(() {
-              //           itemCount++;
-              //           updateTotalAmount();
-              //         });
-              //       },
-              //       iconSize: 48.0,
-              //     ),
-              //   ],
-              // ),
-
             ],
           ),
         ),
